@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# e2e with Vercel
 
-## Getting Started
+A Next.js App Router greeting app, ready to deploy on Vercel, with e2e tests
+that run against your local dev server or any deployment URL. It has three
+locator tests and two agent tests.
 
-First, run the development server:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fe2e-inc%2Fe2e-vercel)
+
+![Next.js example app with the greeting "hello, Ada!"](screenshot.png)
+
+## The tests
+
+- [tests/deterministic.e2e.ts](tests/deterministic.e2e.ts) uses locators to
+  check the form, the empty-name error, and the greeting. It needs no model.
+- [tests/agentic.e2e.ts](tests/agentic.e2e.ts) asks the agent to get a
+  greeting and to find the empty-name error. Each agent step is paired with a
+  locator check that doesn't depend on the model.
+
+## Agent tests and the AI Gateway
+
+The agent uses `openai/gpt-6-luna-fast` through the
+[Vercel AI Gateway](https://vercel.com/docs/ai-gateway). It reads
+`AI_GATEWAY_API_KEY`. In a linked Vercel project, a `VERCEL_OIDC_TOKEN` from
+`vercel env pull` works too. e2e doesn't load `.env` files, so export the
+variable in your shell.
+
+Without a key or a token, the agent tests skip and the locator tests still run.
+
+## Run locally
+
+Use Node 22.22.3+, 24.8+, or 26+. From this folder:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+AI_GATEWAY_API_KEY="your-key" npm run test:e2e
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The runner starts the app at `http://localhost:3100` and downloads Chromium on
+the first run if needed. Leave out the key to run only the locator tests. Add
+`-- --no-cache` to use fresh model calls. Results are in `.e2e/report.json`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Test a deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Set `APP_URL` to test a deployed app, such as a Vercel preview URL, instead
+of the local dev server:
 
-## Learn More
+```bash
+APP_URL="https://your-app.vercel.app" npm run test:e2e
+```
 
-To learn more about Next.js, take a look at the following resources:
+See [e2e.config.ts](e2e.config.ts) and [tests/](tests/) for the setup.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+[MIT](LICENSE)
 
-## Deploy on Vercel
+Last checked with e2e 0.23.1, @e2e-dev/web 0.16.0, Next.js 16.4, and Node 24.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<a href="https://e2e.com">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="e2e-logo-white.png">
+    <img src="e2e-logo-black.png" alt="e2e" width="160">
+  </picture>
+</a>
