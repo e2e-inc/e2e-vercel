@@ -29,8 +29,14 @@ once a deployment has built. On each run it:
 2. Checks out that commit and installs dependencies and Chromium.
 3. Runs `npx e2e run --reporter list,junit` with `APP_URL` set to the
    deployment's URL.
-4. Uploads `.e2e/report.json`, `.e2e/junit.xml`, and `.e2e/results` as an
+4. Posts the results as a comment on the deployment's pull request with the
+   [`@e2e-dev/github` reporter](https://e2e.com/docs/github), and writes them
+   to the job summary. A new run updates the same comment.
+5. Uploads `.e2e/report.json`, `.e2e/junit.xml`, and `.e2e/results` as an
    artifact, and sets the commit status to the result.
+
+Vercel's event doesn't name a pull request, so the workflow finds the open
+pull request for the deployed commit and passes it to the reporter.
 
 The replay cache in `.e2e/cache` is committed. The agent's steps replay from it
 in CI instead of calling the model again, until the app or the test changes.
