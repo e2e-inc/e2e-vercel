@@ -22,19 +22,6 @@ export function GreetingForm() {
 
   return (
     <form className="form" onSubmit={greet}>
-      <div className="field">
-        <input
-          id="name"
-          className="field-input"
-          autoComplete="off"
-          aria-invalid={error}
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
-        <label className="field-label" htmlFor="name">
-          name
-        </label>
-      </div>
       <button className="button" type="submit">
         greet
       </button>
