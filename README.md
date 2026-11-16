@@ -32,6 +32,11 @@ once a deployment has built. On each run it:
 4. Uploads `.e2e/report.json`, `.e2e/junit.xml`, and `.e2e/results` as an
    artifact, and sets the commit status to the result.
 
+The replay cache in `.e2e/cache` is committed. The agent's steps replay from it
+in CI instead of calling the model again, until the app or the test changes.
+`app.identity` in [e2e.config.ts](e2e.config.ts) keeps the cache valid across
+deployment URLs.
+
 A [Deployment Check](https://vercel.com/docs/deployment-checks) on the
 `e2e - production` status keeps a production deployment off your production
 domains until its tests pass. When they fail, the previous deployment stays
