@@ -5,6 +5,8 @@ import { gateway } from 'ai';
 // Set APP_URL to test a deployed app, such as a Vercel preview URL.
 // Without it, the runner tests the local dev server.
 const appUrl = process.env.APP_URL;
+// Lets the browser past Vercel Deployment Protection on preview and unreleased deployments.
+const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 
 export default {
   // The Vercel AI Gateway serves the model and reads AI_GATEWAY_API_KEY, or the OIDC token of a linked Vercel project.
@@ -17,7 +19,7 @@ export default {
   },
   targets: [
     {
-      engine: web(),
+      engine: web(bypassSecret ? { headers: { 'x-vercel-protection-bypass': bypassSecret } } : {}),
       app: appUrl
         ? { url: appUrl }
         : {

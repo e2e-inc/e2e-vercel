@@ -16,6 +16,43 @@ locator tests and two agent tests.
   greeting and to find the empty-name error. Each agent step is paired with a
   locator check that doesn't depend on the model.
 
+## Testing every deployment
+
+[.github/workflows/e2e.yml](.github/workflows/e2e.yml) runs the tests
+against every Vercel deployment, preview and production. Vercel starts it with
+a `vercel.deployment.ready`
+[repository dispatch event](https://vercel.com/docs/git/vercel-for-github#repository-dispatch-events)
+once a deployment has built. On each run it:
+
+1. Sets a pending commit status named `e2e - preview` or `e2e - production`
+   on the deployed commit.
+2. Checks out that commit and installs dependencies and Chromium.
+3. Runs `npx e2e run --reporter list,junit` with `APP_URL` set to the
+   deployment's URL.
+4. Uploads `.e2e/report.json`, `.e2e/junit.xml`, and `.e2e/results` as an
+   artifact, and sets the commit status to the result.
+
+A [Deployment Check](https://vercel.com/docs/deployment-checks) on the
+`e2e - production` status keeps a production deployment off your production
+domains until its tests pass. When they fail, the previous deployment stays
+live.
+
+### Set it up for your project
+
+1. Deploy with the button above, or import your copy of the repository into
+   Vercel.
+2. In **Settings → Git**, turn on **repository_dispatch events**.
+3. In **Settings → Deployment Protection**, add a **Protection Bypass for
+   Automation** secret. The tests send it in the `x-vercel-protection-bypass`
+   header, so they can open protected deployments.
+4. In GitHub, under **Settings → Secrets and variables → Actions**, add the
+   bypass secret as `VERCEL_AUTOMATION_BYPASS_SECRET` and a
+   [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) key as
+   `AI_GATEWAY_API_KEY`. Without the key, the agent tests skip.
+5. In **Settings → Build and Deployment → Deployment Checks**, select **Add
+   Checks**, choose **GitHub**, and select `e2e - production`. The status shows
+   up there after the workflow's first run.
+
 ## Agent tests and the AI Gateway
 
 The agent uses `openai/gpt-6-luna-fast` through the
