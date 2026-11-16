@@ -1,5 +1,6 @@
 import type { E2EConfig } from 'e2e';
 import { web } from '@e2e-dev/web';
+import { github } from '@e2e-dev/github';
 import { gateway } from 'ai';
 
 // Set APP_URL to test a deployed app, such as a Vercel preview URL.
@@ -17,6 +18,8 @@ export default {
       system: 'You are a thorough QA agent. Verify every outcome.',
     },
   },
+  // On GitHub Actions, posts the results as a pull request comment and writes them to the job summary.
+  reporters: ['list', github()],
   targets: [
     {
       engine: web(bypassSecret ? { headers: { 'x-vercel-protection-bypass': bypassSecret } } : {}),
