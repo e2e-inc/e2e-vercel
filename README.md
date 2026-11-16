@@ -27,8 +27,8 @@ once a deployment has built. On each run it:
 1. Sets a pending commit status named `e2e - preview` or `e2e - production`
    on the deployed commit.
 2. Checks out that commit and installs dependencies and Chromium.
-3. Runs `npx e2e run --reporter list,junit` with `APP_URL` set to the
-   deployment's URL.
+3. Runs `npx e2e run --reporter list,junit --video on` with `APP_URL` set
+   to the deployment's URL, recording a video of each test.
 4. Posts the results as a comment on the deployment's pull request with the
    [`@e2e-dev/github` reporter](https://e2e.com/docs/github), and writes them
    to the job summary. A new run updates the same comment.
