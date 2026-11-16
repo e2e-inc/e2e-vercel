@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "trace-1",
+  "createdAt": "2026-11-16T13:17:18.608Z",
+  "payload": {
+    "actions": [
+      {
+        "name": "tap",
+        "summary": "tap button \"greet\"",
+        "target": {
+          "role": "button",
+          "name": "greet"
+        }
+      }
+    ],
+    "executor": {
+      "name": "e2e-default-agent",
+      "version": "2"
+    },
+    "recordedFor": {
+      "testId": "tests/agentic.e2e.ts::the%20agent%20finds%20the%20empty-name%20error",
+      "targetId": "web",
+      "instructionDigest": "baea30ef819e30ae3c9dce4dd4e58db7cba7a0a10a51713d2530281bb6dd2673",
+      "paramsDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "callIndex": 0,
+      "agent": "default"
+    },
+    "recordedBy": {
+      "provider": "gateway",
+      "model": "openai/gpt-6-luna-fast"
+    },
+    "summary": "Pressed greet with the name field empty; the app displayed the alert “enter a name first.”",
+    "startPath": "/",
+    "endPath": "/",
+    "endAnchors": [
+      {
+        "role": "alert",
+        "name": "enter a name first."
+      }
+    ],
+    "endWaitMs": 11523,
+    "keyedBy": {
+      "cacheSchema": "trace-1",
+      "policyVersion": "conservative/6",
+      "project": "703fc5dd58cc66b7022455826d0a612528d97ec492df569c7fde5799df8ff442",
+      "platform": "web",
+      "engineName": "web",
+      "engineSpiVersion": 1,
+      "appIdentity": "9e81f99be6dbb7ba08a27748def463ba5a9bb8da1de7e4fd885c080b5a89c985",
+      "agentContextDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

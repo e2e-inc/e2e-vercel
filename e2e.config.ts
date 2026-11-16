@@ -20,14 +20,21 @@ export default {
   targets: [
     {
       engine: web(bypassSecret ? { headers: { 'x-vercel-protection-bypass': bypassSecret } } : {}),
-      app: appUrl
-        ? { url: appUrl }
-        : {
-            url: 'http://localhost:3100',
-            // The runner starts the Next.js dev server and waits for the URL to answer.
-            // A server you already started on that port is reused.
-            command: { executable: 'npm', args: ['run', 'dev'], reuseExisting: true },
-          },
+      app: {
+        // The replay cache in .e2e/cache is keyed by the app's identity and environment, which
+        // default to its URL. Every Vercel deployment has a new URL, so a fixed identity lets
+        // local runs and deployment runs share one cache.
+        identity: 'e2e-vercel',
+        environment: 'test',
+        ...(appUrl
+          ? { url: appUrl }
+          : {
+              url: 'http://localhost:3100',
+              // The runner starts the Next.js dev server and waits for the URL to answer.
+              // A server you already started on that port is reused.
+              command: { executable: 'npm', args: ['run', 'dev'], reuseExisting: true },
+            }),
+      },
     },
   ],
 } satisfies E2EConfig;
