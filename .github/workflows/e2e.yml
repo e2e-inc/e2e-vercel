@@ -67,7 +67,8 @@ jobs:
               '{pull_request: {number: $number, head: {sha: $sha}}}' > "$RUNNER_TEMP/pull-request.json"
             export GITHUB_EVENT_PATH="$RUNNER_TEMP/pull-request.json"
           fi
-          npx e2e run --reporter list,junit
+          # --video on records every test to .e2e/results/<test>/attempt-<n>/video/video.webm.
+          npx e2e run --reporter list,junit --video on
         env:
           PULL_REQUEST: ${{ steps.pull-request.outputs.number }}
           SHA: ${{ github.event.client_payload.git.sha }}
