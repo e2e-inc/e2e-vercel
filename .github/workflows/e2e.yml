@@ -15,6 +15,8 @@ permissions:
   # The status action reads this job's result and reports it on the deployed commit.
   actions: read
   statuses: write
+  # The @e2e-dev/github reporter posts the results as a pull request comment.
+  pull-requests: write
 
 jobs:
   e2e:
@@ -44,9 +46,32 @@ jobs:
       - name: Install browsers
         run: npx e2e-web install chromium --with-deps
 
-      - name: Run e2e against the deployment
-        run: npx e2e run --reporter list,junit
+      # A repository_dispatch event names no pull request, so look it up from the
+      # deployed commit. A production deployment of main usually has none.
+      - name: Find the pull request
+        id: pull-request
+        run: |
+          number=$(gh api "repos/$GITHUB_REPOSITORY/commits/$SHA/pulls" \
+            --jq '[.[] | select(.state == "open")][0].number // empty')
+          echo "number=$number" >> "$GITHUB_OUTPUT"
         env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.client_payload.git.sha }}
+
+      - name: Run e2e against the deployment
+        run: |
+          # The @e2e-dev/github reporter reads the pull request from the event
+          # payload, so give it one that names the pull request and its commit.
+          if [ -n "$PULL_REQUEST" ]; then
+            jq -n --argjson number "$PULL_REQUEST" --arg sha "$SHA" \
+              '{pull_request: {number: $number, head: {sha: $sha}}}' > "$RUNNER_TEMP/pull-request.json"
+            export GITHUB_EVENT_PATH="$RUNNER_TEMP/pull-request.json"
+          fi
+          npx e2e run --reporter list,junit
+        env:
+          PULL_REQUEST: ${{ steps.pull-request.outputs.number }}
+          SHA: ${{ github.event.client_payload.git.sha }}
+          GITHUB_TOKEN: ${{ github.token }}
           APP_URL: ${{ github.event.client_payload.url }}
           AI_GATEWAY_API_KEY: ${{ secrets.AI_GATEWAY_API_KEY }}
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
