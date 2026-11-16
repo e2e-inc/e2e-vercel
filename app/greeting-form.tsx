@@ -2,6 +2,10 @@
 
 import { useState, type FormEvent } from 'react';
 
+function greetingFor(name: string): string {
+  throw new Error(`Could not greet ${name}`);
+}
+
 export function GreetingForm() {
   const [name, setName] = useState('');
   const [error, setError] = useState(false);
@@ -45,7 +49,7 @@ export function GreetingForm() {
       ) : null}
       {greeted !== null ? (
         <p className="status" role="status">
-          hello, {greeted}!
+          {greetingFor(greeted)}
         </p>
       ) : null}
     </form>
