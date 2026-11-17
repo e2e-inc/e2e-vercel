@@ -1,12 +1,19 @@
-# e2e with Vercel
+# Next.js with e2e
 
 A Next.js App Router greeting app, ready to deploy on Vercel, with e2e tests
-that run against your local dev server or any deployment URL. It has three
-locator tests and two agent tests.
+that run against every preview and production deployment. It has three
+locator tests and two agent tests. A GitHub Action posts the results on your
+pull request, and a Vercel Deployment Check keeps a failing build off
+production.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fe2e-inc%2Fe2e-vercel)
+**Demo:** [vercel.e2e.new](https://vercel.e2e.new)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fe2e-inc%2Fe2e-vercel-previews&project-name=nextjs-e2e&repository-name=nextjs-e2e&demo-title=Next.js%20with%20e2e&demo-description=Run%20e2e%20tests%20against%20every%20Vercel%20preview%20and%20production%20deployment.&demo-url=https%3A%2F%2Fvercel.e2e.new&demo-image=https%3A%2F%2Fraw.githubusercontent.com%2Fe2e-inc%2Fe2e-vercel-previews%2Fmain%2Fscreenshot.png)
 
 ![Next.js example app with the greeting "hello, Ada!"](screenshot.png)
+
+For a full walkthrough, see
+[Vercel Previews](https://e2e.com/docs/ci/vercel) in the e2e docs.
 
 ## The tests
 
@@ -50,8 +57,9 @@ live.
 
 ### Set it up for your project
 
-1. Deploy with the button above, or import your copy of the repository into
-   Vercel.
+1. Deploy with the button above. It copies this repository to your GitHub
+   account and creates a Vercel project for it. You can also import your own
+   copy of the repository into Vercel.
 2. In **Settings → Git**, turn on **repository_dispatch events**.
 3. In **Settings → Deployment Protection**, add a **Protection Bypass for
    Automation** secret. The tests send it in the `x-vercel-protection-bypass`
@@ -76,7 +84,7 @@ Without a key or a token, the agent tests skip and the locator tests still run.
 
 ## Run locally
 
-Use Node 22.22.3+, 24.8+, or 26+. From this folder:
+Use Node 22.22.3+, 24.8+, or 26+. Clone your copy of the repository, then:
 
 ```bash
 npm install

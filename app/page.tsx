@@ -15,7 +15,13 @@ export default function Home() {
         <GreetingForm />
       </main>
 
-      <footer className="footer">example app for e2e. the tests live in tests/.</footer>
+      <footer className="footer">
+        <p>example app for e2e. the tests live in tests/.</p>
+        <nav className="footer-links" aria-label="resources">
+          <a href="https://github.com/e2e-inc/e2e-vercel-previews">source on github</a>
+          <a href="https://e2e.com/docs/ci/vercel">e2e docs for vercel</a>
+        </nav>
+      </footer>
     </div>
   );
 }

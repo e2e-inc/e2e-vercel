@@ -25,8 +25,10 @@ export function GreetingForm() {
       <div className="field">
         <input
           id="name"
+          name="name"
           className="field-input"
           autoComplete="off"
+          spellCheck={false}
           aria-invalid={error}
           value={name}
           onChange={(event) => setName(event.target.value)}
